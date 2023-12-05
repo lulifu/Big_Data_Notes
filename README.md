@@ -1,8 +1,9 @@
 # Big_Data
+
 Notes for BD
 
 - [Big\_Data](#big_data)
-  - [In progress:](#in-progress)
+  - [In progress](#in-progress)
   - [Growth Path 学习路径](#growth-path-学习路径)
     - [Coding](#coding)
     - [Java](#java)
@@ -16,8 +17,7 @@ Notes for BD
     - [To-do List](#to-do-list)
   - [Questions](#questions)
 
-
-## In progress:
+## In progress
 
 - 项目文档
 - Java Basic
@@ -25,7 +25,6 @@ Notes for BD
 - Maven, Git
 - StarRocks
 - LeetCode
-
 
 ## Growth Path 学习路径
 
@@ -62,7 +61,6 @@ TBD
 - Hive
 
 ### Flink
-
 
 ### SSM
 
@@ -111,7 +109,6 @@ SSM组合的优势：
 
 SSM框架组合是Java Web开发的经典选择，适用于各种规模的企业级应用。
 
-
 ### Interview
 
 - Java 底层源码
@@ -121,6 +118,7 @@ SSM框架组合是Java Web开发的经典选择，适用于各种规模的企业
 - Spring 源码分析
 
 ### To-do List
+
 - 开源经历
 - Kaggle: Algorithms about Risk Control
 - Hive
@@ -128,7 +126,6 @@ SSM框架组合是Java Web开发的经典选择，适用于各种规模的企业
 - Flink
 - HBase
 - 《大数据之路：阿里巴巴大数据实践》
-
 
 日志收集框架：Flume、Logstash、Filebeat
 
