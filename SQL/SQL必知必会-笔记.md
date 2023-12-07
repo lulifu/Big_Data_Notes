@@ -5,7 +5,21 @@
   - [Wildcard](#wildcard)
   - [Functions](#functions)
   - [Group](#group)
-  - [TODO List](#todo-list)
+  - [Subquery](#subquery)
+  - [Join](#join)
+  - [Union](#union)
+  - [Insert](#insert)
+  - [Update and Delete](#update-and-delete)
+  - [Create and ALT](#create-and-alt)
+  - [View 视图](#view-视图)
+  - [Procedure 存储过程](#procedure-存储过程)
+  - [Transaction processing 事务处理](#transaction-processing-事务处理)
+  - [Constraint 约束](#constraint-约束)
+    - [Primary Key](#primary-key)
+    - [Foreign Key](#foreign-key)
+    - [Unique](#unique)
+    - [Check](#check)
+  - [OLTP vs. OLAP](#oltp-vs-olap)
 
 ## Basics
 
@@ -57,7 +71,7 @@
 - String
   - SUBSTRING(), SUBSTR(), MID()
   - UPPER(), LOWER()
-  - LENGTH()
+  - LENGTH() 字节数, CHAR_LENGTH() 字符数，英文字符每个占一字节
   - LEFT(), RIGHT()
   - CONVERT(), CAST()
 - Date
@@ -84,6 +98,158 @@
 - 如果分组列中包含具有 NULL 值的行，则 NULL 将作为一个分组返回。如果列中有多行 NULL 值，它们将分为一组。
 - GROUP BY子句必须出现在WHERE子句之后，ORDER BY子句之前。WHERE 在数据分组前进行过滤，HAVING 在数据分组后进行过滤
 
-## TODO List
+## Subquery
 
-- OLTP, OLAP
+- 作为子查询的 SELECT 语句只能查询单个列
+- 作为计算字段使用子查询
+
+## Join
+
+- 笛卡儿积(cartesian product)：由没有联结条件的表关系返回的结果为笛卡儿积。检索出的行的数目将是第一个表中的行数乘以第二个表中的行数
+
+## Union
+
+- UNION 必须由两条或两条以上的 SELECT 语句组成，语句之间用关键字 UNION 分隔
+- UNION 中的每个查询必须包含相同的列、表达式或聚集函数
+- 列数据类型必须兼容:类型不必完全相同，但必须是 DBMS 可以隐含转换的类型
+- UNION 从查询结果集中自动去除了重复的行;换句话说，它的行为与一条 SELECT 语句中使用多个 WHERE 子句条件一样; 如果想返回所有的匹配行，可使用UNION ALL而不是UNION。
+
+## Insert
+
+- insert into values
+
+```sql
+INSERT INTO Customers(cust_id,
+                      cust_name,
+                      cust_address,
+                      cust_city,
+                      cust_state,
+                      cust_zip,
+                      cust_country)
+VALUES('1000000006',
+       'Toy Land',
+       '123 Any Street',
+       'New York',
+       'NY',
+       '11111',
+       'USA');
+```
+
+- insert select
+
+```sql
+INSERT INTO Customers(cust_id,
+                      cust_contact,
+                      cust_email,
+                      cust_name,
+                      cust_address,
+                      cust_city,
+                      cust_state,
+                      cust_zip,
+                      cust_country)
+SELECT cust_id,
+       cust_contact,
+       cust_email,
+       cust_name,
+       cust_address,
+       cust_city,
+       cust_state,
+       cust_zip,
+       cust_country
+FROM CustNew;
+```
+
+- select into
+
+```sql
+SELECT *
+INTO CustCopy
+FROM Customers;
+```
+
+## Update and Delete
+
+## Create and ALT
+
+```sql
+alter table Vendors
+add vend_phone char(20);
+```
+
+## View 视图
+
+视图不包含任何列或数据，包含的是一个查询
+
+作用：
+
+- 重用 SQL 语句
+- 简化复杂的 SQL 操作。在编写查询后，可以方便地重用它而不必知道其基本查询细节。
+- 使用表的一部分而不是整个表。
+- 保护数据。可以授予用户访问表的特定部分的权限，而不是整个表的访问权限。
+- 更改数据格式和表示。视图可返回与底层表的表示和格式不同的数据。
+
+## Procedure 存储过程
+
+简单、安全、高性能
+
+## Transaction processing 事务处理
+
+通过确保成批的 SQL 操作要么完全执行，要么完全不执行，来维护数据库的完整性。管理insert，update和delete语句
+
+术语：事务、回退、提交、保留点(savepoint)
+
+## Constraint 约束
+
+### Primary Key
+
+### Foreign Key
+
+外键是表中的一列，其值必须列在另一表的主键中。外键是保证引用完整性的极其重要部分。
+
+```sql
+ALTER TABLE Orders
+ADD CONSTRAINT
+FOREIGN KEY (cust_id) REFERENCES Customers (cust_id)
+```
+
+### Unique
+
+- 唯一约束列可包含 NULL 值。
+- 唯一约束列可修改或更新。
+- 唯一约束列的值可重复使用。
+
+### Check
+
+```sql
+ADD CONSTRAINT CHECK (gender LIKE '[MF]')
+```
+
+## OLTP vs. OLAP
+
+OLTP（Online Transaction Processing）和 OLAP（Online Analytical Processing）是两种不同类型的数据处理系统，它们在数据处理和业务应用场景上有着根本的区别。
+
+OLTP（在线事务处理）
+
+- 定义：OLTP 是一种面向事务的数据处理方式，主要用于处理日常的业务交易。它通常用于处理大量的短小、简单的查询和更新操作。
+- 特点：
+  - 操作类型：处理频繁的插入、更新、删除操作。
+  - 数据特性：OLTP 系统中的数据通常是当前的、操作性的，而且经常变化。
+  - 性能需求：强调处理速度和数据的一致性，以支持日常业务操作。
+  - 例子：银行系统中的账户交易、电子商务网站中的订单处理等。
+
+OLAP（在线分析处理）
+
+- 定义：OLAP 是一种面向分析的数据处理方式，用于快速分析大量的信息。它专注于对数据的复杂查询，以支持决策制定。
+- 特点：
+  - 操作类型：主要用于执行复杂的查询，特别是涉及到大量数据的聚合和汇总。
+  - 数据特性：OLAP 系统中的数据通常是历史数据，更加稳定，用于分析和报告。
+  - 性能需求：强调查询速度和数据的多维分析能力。
+  - 例子：财务报告系统、销售数据分析、市场研究等。
+
+对比总结
+
+- 应用焦点不同：OLTP 主要关注日常事务处理，而 OLAP 关注的是数据分析和决策支持。
+- 数据处理方式：OLTP 系统强调快速、高效的事务处理，而 OLAP 系统设计用来进行复杂的数据查询和分析。
+- 数据的组织和结构：OLTP 系统中数据通常以行为中心的格式存储（便于快速处理事务），而 OLAP 系统则倾向于列式存储或多维数据结构（优化查询性能）。
+
+在实际的业务环境中，OLTP 和 OLAP 系统通常是互补的，两者共同支持组织的运营和决策制定过程。
